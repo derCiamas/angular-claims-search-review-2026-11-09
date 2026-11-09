@@ -1,5 +1,6 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { Claim } from './claim.model';
 
@@ -7,7 +8,10 @@ import { Claim } from './claim.model';
   providedIn: 'root'
 })
 export class ClaimsService {
-  search(_query: string | null): Observable<Claim[]> {
-    return of([]);
+  constructor(private readonly http: HttpClient) {}
+
+  search(query: string | null): Observable<Claim[]> {
+    const params = new HttpParams().set('query', query ?? '');
+    return this.http.get<Claim[]>('/api/claims', { params });
   }
 }

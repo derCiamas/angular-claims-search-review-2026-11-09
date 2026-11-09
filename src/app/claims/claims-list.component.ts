@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { debounceTime, mergeMap } from 'rxjs/operators';
 
 import { Claim } from './claim.model';
+import { ClaimsService } from './claims.service';
 
 @Component({
   selector: 'app-claims-list',
@@ -12,7 +14,22 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
   results: Claim[] = [];
   loading = false;
 
-  ngOnInit(): void {}
+  constructor(private readonly claims: ClaimsService) {}
+
+  ngOnInit(): void {
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        mergeMap((query) => {
+          this.loading = true;
+          return this.claims.search(query);
+        })
+      )
+      .subscribe((results) => {
+        this.results = results;
+        this.loading = false;
+      });
+  }
 
   ngOnDestroy(): void {}
 }
