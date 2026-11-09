@@ -7,13 +7,13 @@
 
     <p class="loading" *ngIf="loading">Loading claims…</p>
 
-    <ul class="results" *ngIf="results.length">
+    <ul class="results" *ngIf="!loading && results.length">
       <li *ngFor="let claim of results">
         <strong>{{ claim.claimNumber }}</strong>
         <span>{{ claim.customerName }} · {{ claim.status }}</span>
       </li>
     </ul>
 
-    <p class="empty" *ngIf="!loading && !results.length">No claims to display.</p>
+    <p class="empty" *ngIf="!loading && !results.length">No claims found.</p>
   </section>
 </main>
